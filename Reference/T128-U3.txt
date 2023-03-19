@@ -1,0 +1,28 @@
+U3 equations
+Base address depends on nASEL(defined by SW7 and SW8):
+0xC8000 
+0xCC000
+0xD8000
+0xDC000
+
+// Offset 0x0000
+nBOE = nSMEMR & nSMEMW  + nASEL;
+
+// Offset 0x0E00
+nREGCS = SA12'  + SA11'  + SA10'  + SA5  + SA6  + SA7  + SA8  + SA9  + nASEL;
+
+// Offset 0x0E10
+nCFGRD = SA12'  + SA11'  + SA10'  + SA5'  + SA6  + SA7  + SA8  + SA9  + nSMEMR  + nASEL;
+
+// Offset 0x0C00 1KB RAM, not used
+nRAMCS = SA12'  + SA11'  + SA10  + nASEL;
+
+// Offset  0x0000 .. 0x1FFF 8KB ROM
+nROMCS = SA11 & SA12  + nASEL;
+
+// Offset 0x1F00
+nU1A1 = nSMEMR & nSMEMW  + SA12'  + SA11'  + SA10'  + SA9'  + nASEL;
+
+// 5380 chip select
+// Offset 0x1D00
+nCS = SA12'  + SA11'  + SA10'  + SA8'  + SA9  + nASEL;
