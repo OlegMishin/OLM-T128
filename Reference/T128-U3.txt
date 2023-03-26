@@ -1,28 +1,57 @@
-U3 equations
-Base address depends on nASEL(defined by SW7 and SW8):
-0xC8000 
-0xCC000
-0xD8000
-0xDC000
+Name     T128-U3 ; 
+PartNo   00 ; 
+Date     10/10/10 ;
+Revision 01 ;
+Designer OLM ;
+Company  None ;
+Assembly None ; 
+Location  ;
+Device   g16v8 ;
 
-// Offset 0x0000
-nBOE = nSMEMR & nSMEMW  + nASEL;
+PIN     1 = A5;
+PIN     2 = A6;
+PIN     3 = A7;
+PIN     4 = A8;
+PIN     5 = A9;
+PIN     6 = A10;
+PIN     7 = A11;
+PIN     8 = A12;
+PIN     9 = nSMEMR;
+PIN     11 = nSMEMW;
 
-// Offset 0x0E00
-nREGCS = SA12'  + SA11'  + SA10'  + SA5  + SA6  + SA7  + SA8  + SA9  + nASEL;
 
-// Offset 0x0E10
-nCFGRD = SA12'  + SA11'  + SA10'  + SA5'  + SA6  + SA7  + SA8  + SA9  + nSMEMR  + nASEL;
+/* *************** OUTPUT PINS *********************/
+PIN     12 = nBOE; 
+PIN     13 = nREGCS; 
+PIN     14 = nCFGRD; 
+PINNODE     15 = nHADDR; /*nRAMCS; - had to reuse the pin as a node to fit  nREGCS and nCFGRD*/  
+PIN     16 = nROMCS;  
+PIN     17 = nU1A1;  
+PIN     18 = nASEL;  
+PIN     19 = n5380CS;  
 
-// Offset 0x0C00 1KB RAM, not used
-nRAMCS = SA12'  + SA11'  + SA10  + nASEL;
+nHADDR = !A12  # !A11  # !A10  # A9  # A8  # A7  # A6;
 
-// Offset  0x0000 .. 0x1FFF 8KB ROM
-nROMCS = SA11 & SA12  + nASEL;
+/* Offset 0x0000 */
+nBOE = nSMEMR & nSMEMW  # nASEL;
 
-// Offset 0x1F00
-nU1A1 = nSMEMR & nSMEMW  + SA12'  + SA11'  + SA10'  + SA9'  + nASEL;
+/* Offset 0x0E00 */
+nREGCS = nHADDR  # A5  # nASEL; 
 
+/* Offset 0x0E10 */
+nCFGRD = nHADDR  # !A5  # nSMEMR  # nASEL;
+
+/* Offset 0x0C00 
+nRAMCS = !A12  # !A11  # A10 # nASEL;
+*/
+
+/* Offset  0x0000 .. 0x1FFF 8KB ROM */
+nROMCS = (A11 & A12) # nASEL;
+
+/* Offset 0x1F00 */
+nU1A1 = nSMEMR & nSMEMW  # !A12  # !A11 # !A10  # !A9 # nASEL;
+/*
 // 5380 chip select
-// Offset 0x1D00
-nCS = SA12'  + SA11'  + SA10'  + SA8'  + SA9  + nASEL;
+// Offset 0x1D00 */
+n5380CS = !A12 # !A11 # !A10  # !A8 # A9 # nASEL;
+

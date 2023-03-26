@@ -1,0 +1,68 @@
+Name     T128-U2 ; 
+PartNo   00 ; 
+Date     10/10/10 ;
+Revision 01 ;
+Designer OLM ;
+Company  None ;
+Assembly None ; 
+Location  ;
+Device   p22v10 ;
+
+/* Inputs */
+PIN     1 = CLK;
+PIN     2 = n5380CS;
+PIN     3 = nU1A1;
+PIN     4 = DRQc;
+PIN     5 = U6_5;
+PIN     6 = nMEMW;
+PIN     7 = nMEMR;
+PIN     8 = nIOW;
+PIN     9 = nIOR;
+PIN     10 = JP1_9;
+PIN     11 = Q5;
+PIN     13 = nOE;
+PIN     14 = Q1;
+PIN     23 = nRESET;
+
+/* Outputs */
+PIN     15 = nZEROWS;
+PIN     16 = IOCHRDY;
+PIN     17 = nSW1; /* REG */
+PIN 	18 = PIN18;/* REG */
+PIN     19 = nDACK; /* REG */
+PIN     20 = PIN20;/* REG */
+PIN     21 = n5380IOW;
+PIN     22 = n5380IOR;
+
+
+
+!nDACK.D = !nU1A1 & DRQc ;
+nDACK.AR = !nRESET;
+nDACK.SP = 'b'0; 
+
+SWRST = !(!PIN20 & U6_5);
+nSW1 = nSW1 & (SWRST # !nDACK) # Q1;
+
+nZEROWS = nU1A1 # nDACK;
+
+
+PIN20.d = !PIN18 # (n5380CS & nU1A1) # U6_5;
+PIN20.oe = 'b'1; 
+PIN20.AR = !nRESET;
+PIN20.SP = 'b'0;
+
+PIN18.d = PIN20 # !DRQc;
+PIN18.oe = 'b'1; 
+PIN18.AR = !nRESET;
+PIN18.SP = 'b'0;
+
+/* 
+IOCHRDY = !nDACK # DRQc # nU1A1;
+*/
+/* Not used */
+IOCHRDY = 'b'0;
+IOCHRDY.oe = 'b'0; 
+
+n5380IOW = (n5380CS & nU1A1)  # nMEMW ;
+n5380IOR = (n5380CS & nU1A1)  # nMEMR ;
+
